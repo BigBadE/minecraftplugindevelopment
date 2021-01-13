@@ -1,0 +1,16 @@
+buildscript {
+    dependencies {
+        classpath fileTree(include: ['*.jar'], dir: '../gradle-plugin/build/libs')
+    }
+}
+
+apply plugin: "MinecraftPluginDevelopment"
+
+dependencies {
+    compileOnly project(':core')
+    annotationProcessor project(':core')
+}
+
+minecraft {
+    localVersion = '1.16.3'
+}

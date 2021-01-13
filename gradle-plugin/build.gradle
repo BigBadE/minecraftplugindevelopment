@@ -1,0 +1,34 @@
+plugins {
+    // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
+    id 'java-gradle-plugin'
+}
+
+gradlePlugin {
+    // Define the plugin
+    plugins {
+        gradle {
+            id = 'MinecraftPluginDevelopment'
+            implementationClass = 'software.bigbade.minecraftplugindevelopment.MinecraftPluginDevelopmentPlugin'
+        }
+    }
+}
+
+// Add a source set for the functional test suite
+sourceSets {
+    functionalTest {
+    }
+}
+
+gradlePlugin.testSourceSets(sourceSets.functionalTest)
+configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
+
+// Add a task to run the functional tests
+tasks.register('functionalTest', Test) {
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
+    classpath = sourceSets.functionalTest.runtimeClasspath
+}
+
+check {
+    // Run the functional tests as part of `check`
+    dependsOn(tasks.functionalTest)
+}

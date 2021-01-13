@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'java-gradle-plugin'
+    id 'io.franzbecker.gradle-lombok' version '4.0.0'
+}
+
+group 'software.bigbade'
+version '1.0-SNAPSHOT'
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.franzbecker.gradle-lombok'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    lombok {
+        version = '1.18.16'
+        sha256 = ''
+    }
+
+    tasks.withType(JavaCompile.class) {
+        options.encoding = 'UTF-8'
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+
+        testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+        testImplementation 'org.mockito:mockito-core:3.3.3'
+        testImplementation 'org.powermock:powermock-module-junit4:2.0.7'
+        testImplementation 'org.powermock:powermock-api-mockito2:2.0.7'
+    }
+}
