@@ -8,4 +8,3 @@ include(':maven-plugin')
 project(':maven-plugin').projectDir = file('maven-plugin')
 include(':example')
 project(':example').projectDir = file('example')
-

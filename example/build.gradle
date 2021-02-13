@@ -4,13 +4,14 @@ buildscript {
     }
 }
 
-apply plugin: "MinecraftPluginDevelopment"
+apply plugin: "minecraftplugindevelopment"
+
+minecraft {
+    localVersion = '1.16.5'
+    eula = true
+}
 
 dependencies {
     compileOnly project(':core')
     annotationProcessor project(':core')
-}
-
-minecraft {
-    localVersion = '1.16.3'
 }

@@ -1,16 +1,27 @@
 plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     id 'java-gradle-plugin'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'idea'
 }
 
 gradlePlugin {
     // Define the plugin
     plugins {
         gradle {
-            id = 'MinecraftPluginDevelopment'
+            id = 'minecraftplugindevelopment'
             implementationClass = 'com.bigbade.minecraftplugindevelopment.MinecraftPluginDevelopmentPlugin'
         }
     }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly gradleApi()
+    implementation 'se.llbit:jo-json:1.3.1'
 }
 
 // Add a source set for the functional test suite
@@ -31,4 +42,8 @@ tasks.register('functionalTest', Test) {
 check {
     // Run the functional tests as part of `check`
     dependsOn(tasks.functionalTest)
+}
+
+shadowJar {
+    archiveClassifier.set('')
 }

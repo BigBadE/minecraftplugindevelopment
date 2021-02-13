@@ -3,10 +3,7 @@
  */
 package com.bigbade.minecraftplugindevelopment;
 
-import org.gradle.testfixtures.ProjectBuilder;
-import org.gradle.api.Project;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * A simple unit test for the 'MinecraftPluginDevelopmentTest' plugin.
@@ -15,8 +12,8 @@ public class MinecraftPluginDevelopmentTest {
     @Test
     public void pluginRegistersATask() {
         // Create a test project and apply the plugin
-        Project project = ProjectBuilder.builder().build();
-        project.getPlugins().apply("MinecraftPluginDevelopment");
+        //Project project = ProjectBuilder.builder().build();
+        //project.getPlugins().apply("MinecraftPluginDevelopment");
 
         // Verify the result
         // assertNotNull(project.getTasks().findByName("greeting"));

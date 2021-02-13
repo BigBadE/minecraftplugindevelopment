@@ -8,6 +8,7 @@ import org.gradle.api.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,6 +23,9 @@ public class MinecraftPluginDevelopmentPlugin implements Plugin<Project> {
         PluginDevelopmentExtension extension = project.getExtensions().findByType(PluginDevelopmentExtension.class);
         assert extension != null;
         project.afterEvaluate(found -> {
+            if(extension.build == null) {
+                extension.build = DownloadServerTask.getBuild(extension.localVersion);
+            }
             try {
                 setupDependencies(extension, project);
             } catch (MalformedURLException | URISyntaxException e) {
@@ -29,9 +33,17 @@ public class MinecraftPluginDevelopmentPlugin implements Plugin<Project> {
             }
         });
 
-        project.getTasks().create("buildSpigot", MinecraftPluginTask.class, task -> {
+        new File(project.getBuildDir(), "server").mkdir();
+
+        project.getTasks().create("setupServer", DownloadServerTask.class, task -> {
+            task.setGroup("Deployment");
+        });
+
+        project.getTasks().create("runServer", StartServerTask.class, task -> {
+            task.setMain("-jar");
+            task.dependsOn("setupServer");
             task.getOutputs().upToDateWhen(found -> false);
-            task.setGroup("IDE");
+            task.setGroup("Deployment");
         });
     }
 
