@@ -13,6 +13,7 @@ allprojects {
         }
     }
 
+    apply plugin: 'maven-publish'
     apply plugin: 'java'
     apply plugin: 'io.franzbecker.gradle-lombok'
 

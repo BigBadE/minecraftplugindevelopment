@@ -27,7 +27,7 @@ plugins {
 
 TODO
 
-# WIP Project
+# WIP Project. This lays out what I'm planning and that can be done within a decent amount of time.
 
 All features here were working when they are added, and are tested in the example project. Any changes may or may not be
 reflected in this README, and suggestions on API changes are always welcome
