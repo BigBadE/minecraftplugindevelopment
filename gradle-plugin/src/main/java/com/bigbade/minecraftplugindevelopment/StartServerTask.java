@@ -1,6 +1,7 @@
 package com.bigbade.minecraftplugindevelopment;
 
 import org.gradle.api.tasks.JavaExec;
+import org.gradle.api.tasks.bundling.Jar;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +32,11 @@ public class StartServerTask extends JavaExec {
                         StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
             }
 
-            Files.copy(getProject().getBuildFile().toPath(),
-                    new File(getProject().getBuildDir(), "server/plugins/" + getProject().getBuildFile().getName()).toPath(),
+            Jar jarTask = (Jar) getProject().getTasks().getByName("jar");
+
+            Files.copy(jarTask.getArchiveFile().get().getAsFile().toPath(),
+                    new File(getProject().getBuildDir(), "server/plugins/" +
+                            jarTask.getArchiveFileName().get()).toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             MinecraftPluginDevelopmentPlugin.LOGGER.error("Error moving plugin into server", e);
