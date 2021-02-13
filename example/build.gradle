@@ -1,17 +1,17 @@
 buildscript {
     dependencies {
-        classpath fileTree(include: ['*.jar'], dir: '../gradle-plugin/build/libs')
+        //classpath fileTree(include: ['*.jar'], dir: '../gradle-plugin/build/libs')
     }
 }
 
-apply plugin: "minecraftplugindevelopment"
+dependencies {
+    compileOnly 'com.bigbade:minecraftplugindevelopment:gradle-plugin:v1.0.0'
+}
+
+apply plugin: 'java'
+apply plugin: 'minecraftplugindevelopment'
 
 minecraft {
     localVersion = '1.16.5'
     eula = true
-}
-
-dependencies {
-    compileOnly project(':core')
-    annotationProcessor project(':core')
 }
