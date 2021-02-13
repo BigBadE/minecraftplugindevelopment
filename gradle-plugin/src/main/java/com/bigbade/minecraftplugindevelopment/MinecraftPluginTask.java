@@ -1,4 +1,4 @@
-package software.bigbade.minecraftplugindevelopment;
+package com.bigbade.minecraftplugindevelopment;
 
 import groovy.lang.Closure;
 import org.gradle.api.Task;

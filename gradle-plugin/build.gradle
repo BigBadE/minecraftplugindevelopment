@@ -8,7 +8,7 @@ gradlePlugin {
     plugins {
         gradle {
             id = 'MinecraftPluginDevelopment'
-            implementationClass = 'software.bigbade.minecraftplugindevelopment.MinecraftPluginDevelopmentPlugin'
+            implementationClass = 'com.bigbade.minecraftplugindevelopment.MinecraftPluginDevelopmentPlugin'
         }
     }
 }
