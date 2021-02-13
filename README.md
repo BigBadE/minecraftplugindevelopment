@@ -1,13 +1,36 @@
 # MinecraftPluginDevelopment
 
-MinecraftPluginDevelopment is a utility plugin with the core idea of __Compiling to the same bytecode as a normal plugin.__
+MinecraftPluginDevelopment is a utility plugin with the core idea of __Compiling to the same bytecode as a normal
+plugin.__
 
 Any plugins compiled using MinecraftPluginDevelopment are completely standalone from MinecraftPluginDevelopment.
 
+# Adding Gradle Plugin
+
+Make sure you have JitPack as a plugin repository
+
+```
+pluginManagement {
+    repositories {
+	    maven { url 'https://jitpack.io' }
+    }
+}
+```
+Then add the plugin itself:
+```
+plugins {
+    id("com.bigbade:minecraftplugindevelopment") version "{VERSION}"
+}
+```
+
+# Adding Maven Plugin
+
+TODO
+
 # WIP Project
 
-All features here were working when they are added, and are tested in the example project.
-Any changes may or may not be reflected in this README, and suggestions on API changes are always welcome
+All features here were working when they are added, and are tested in the example project. Any changes may or may not be
+reflected in this README, and suggestions on API changes are always welcome
 
 TODO:
 
@@ -23,7 +46,8 @@ ConfigValue:
 Future:
 
 - TranslatedValue
-    - String field has the value of the translation key, independent library is shaded/used in tandem with code generation for E18N with YML.
+    - String field has the value of the translation key, independent library is shaded/used in tandem with code
+      generation for E18N with YML.
 
 # Messages
 
@@ -40,8 +64,8 @@ This is meant for a future localization system implemented into this project.
 
 !! This annotation is required !!
 
-PluginMain defines the main attributes of the plugin, used to generate a plugin.yml
-With this anotation, __There is no need to make a plugin.yml yourself__
+PluginMain defines the main attributes of the plugin, used to generate a plugin.yml With this anotation, __There is no
+need to make a plugin.yml yourself__
 
 <table>
     <tr>
@@ -140,8 +164,8 @@ Fields:
 </table>
 
 WIP FEATURE:
-onCommand is not overriding, and follows the same parameters except args can be replaced with the
-exact arguments you want to use, and non-Strings should be annotated with the appropriate annotation. 
+onCommand is not overriding, and follows the same parameters except args can be replaced with the exact arguments you
+want to use, and non-Strings should be annotated with the appropriate annotation.
 
 Vargs are planned to be allowed.
 
