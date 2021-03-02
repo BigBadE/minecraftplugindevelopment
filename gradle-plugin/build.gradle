@@ -2,15 +2,36 @@ plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     id 'java-gradle-plugin'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.gradle.plugin-publish' version '0.12.0'
     id 'idea'
 }
+
+version = '1.0.2'
 
 gradlePlugin {
     // Define the plugin
     plugins {
-        gradle {
-            id = 'minecraftplugindevelopment'
+        minecraftplugindevelopment {
+            id = 'com.bigbade.minecraftplugindevelopment'
+            description = 'Automatically adds needed libraries, and download/starts the latest server for testing'
+            displayName = 'Minecraft Plugin Development'
             implementationClass = 'com.bigbade.minecraftplugindevelopment.MinecraftPluginDevelopmentPlugin'
+        }
+    }
+}
+
+pluginBundle {
+    website = 'https://www.bigbade.com/minecraftplugindevelopment'
+    vcsUrl = 'https://github.com/BigBadE/minecraftplugindevelopment'
+    description = 'Automatically adds needed libraries, and download/starts the latest server for testing'
+    tags = ['spigot', 'minecraft', 'paper']
+}
+
+publishing {
+    repositories {
+        maven {
+            name = 'testRepo'
+            url = 'build/local-plugin-repository'
         }
     }
 }

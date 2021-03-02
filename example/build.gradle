@@ -1,15 +1,22 @@
 buildscript {
-    dependencies {
-        //classpath fileTree(include: ['*.jar'], dir: '../gradle-plugin/build/libs')
+    repositories {
+        jcenter()
+        maven {
+            url 'https://jitpack.io'
+        }
     }
-}
-
-dependencies {
-    compileOnly 'com.bigbade:minecraftplugindevelopment:gradle-plugin:v1.0.0'
+    dependencies {
+        classpath group: 'com.bigbade.minecraftplugindevelopment', name: 'gradle-plugin', version: '1.0.2'
+    }
 }
 
 apply plugin: 'java'
 apply plugin: 'minecraftplugindevelopment'
+
+dependencies {
+    compileOnly project(':core')
+    annotationProcessor project(':core')
+}
 
 minecraft {
     localVersion = '1.16.5'

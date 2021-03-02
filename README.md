@@ -7,25 +7,22 @@ Any plugins compiled using MinecraftPluginDevelopment are completely standalone 
 
 # Adding Gradle Plugin
 
-Make sure you have JitPack as a plugin repository
-
-```
-pluginManagement {
-    repositories {
-	    maven { url 'https://jitpack.io' }
-    }
-}
-```
-Then add the plugin itself:
+Add the plugin:
 ```
 plugins {
-    id("com.bigbade:minecraftplugindevelopment") version "{VERSION}"
+    id 'minecraftplugindevelopment' version "{VERSION}"
 }
 ```
 
 # Adding Maven Plugin
 
 TODO
+
+# Tasks
+
+This plugin currently adds two tasks: setupServer and runServer. runServer depends on setupServer. 
+It moves the plugin jar and runs the server.
+setupServer downloads the latest build for the local version.
 
 # WIP Project. This lays out what I'm planning and that can be done within a decent amount of time.
 
@@ -58,6 +55,7 @@ This is meant for a future localization system implemented into this project.
 
 <ul>
 <li><a href="#plugin-main">PluginMain</a></li>
+<li><a href="#plugin-listener">PluginListener</a></li>
 <li><a href="#minecraft-command">MinecraftCommand</a></li>
 </ul>
 <h3 id="plugin-main">PluginMain</h3>
@@ -78,7 +76,7 @@ need to make a plugin.yml yourself__
     </tr>
     <tr>
         <th>version</th>
-        <th>Plugin version, in the format: major version.minor version.patch
+        <th>Plugin version, in the format: (major-version.minor-version.patch)
             <br>Major version changes add/remove features, minor version changes may change features or some API points, patches are bug fixes with no features.</th>
     </tr>
     <tr>
@@ -122,6 +120,11 @@ need to make a plugin.yml yourself__
         <th>Any plugins that should be loaded AFTER your plugin loads.</th>
     </tr>
 </table>
+
+<h3 id="plugin-listener">PluginListener</h3>
+
+PluginListener defines a single listener. Listeners are automatically registered.
+
 <h3 id="minecraft-command">MinecraftCommand</h3>
 
 MinecraftCommand defines a single command. Commands are automatically registered.

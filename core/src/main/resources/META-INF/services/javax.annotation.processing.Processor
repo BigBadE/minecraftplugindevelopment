@@ -1,0 +1,6 @@
+com.bigbade.minecraftplugindevelopment.core.processors.PluginMainAnnotationProcessor
+com.bigbade.minecraftplugindevelopment.core.processors.PluginListenerAnnotationProcessor
+com.bigbade.minecraftplugindevelopment.core.processors.TestAnnotationProcessor
+
+
+com.bigbade.minecraftplugindevelopment.core.processors.YMLWriterProcessor

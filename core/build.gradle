@@ -1,7 +1,12 @@
+import org.gradle.internal.jvm.Jvm
+
 plugins {
     id 'java'
 }
 
 dependencies {
-    compileOnly files("${System.properties['java.home']}\\..\\lib\\tools.jar")
+    compileOnly files(Jvm.current().toolsJar)
+
+    implementation files('D:\\Misc. Java\\processorcodeapi\\build\\libs\\processorcodeapi.jar')
 }
+

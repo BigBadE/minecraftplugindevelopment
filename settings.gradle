@@ -1,3 +1,17 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url = "https://jitpack.io"
+        }
+
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
 rootProject.name = 'minecraftplugindevelopment'
 
 include(':core')
@@ -6,5 +20,5 @@ include(':gradle-plugin')
 project(':gradle-plugin').projectDir = file('gradle-plugin')
 include(':maven-plugin')
 project(':maven-plugin').projectDir = file('maven-plugin')
-//include(':example')
-//project(':example').projectDir = file('example')
+include(':example')
+project(':example').projectDir = file('example')
