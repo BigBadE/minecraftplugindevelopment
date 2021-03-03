@@ -6,8 +6,6 @@ plugins {
     id 'idea'
 }
 
-version = '1.0.2'
-
 gradlePlugin {
     // Define the plugin
     plugins {

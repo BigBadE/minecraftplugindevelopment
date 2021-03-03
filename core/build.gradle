@@ -1,12 +1,9 @@
-import org.gradle.internal.jvm.Jvm
-
 plugins {
     id 'java'
 }
 
 dependencies {
-    compileOnly files(Jvm.current().toolsJar)
-
-    implementation files('D:\\Misc. Java\\processorcodeapi\\build\\libs\\processorcodeapi.jar')
+    dependencies {
+        implementation 'com.bigbade:processorcodeapi:812e048e56'
+    }
 }
-

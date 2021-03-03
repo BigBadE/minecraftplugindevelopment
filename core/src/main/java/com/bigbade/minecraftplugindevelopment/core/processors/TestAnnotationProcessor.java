@@ -1,14 +1,8 @@
 package com.bigbade.minecraftplugindevelopment.core.processors;
 
-import com.bigbade.minecraftplugindevelopment.api.factories.INodeFactory;
-import com.bigbade.minecraftplugindevelopment.api.nodes.IClassNode;
 import com.bigbade.minecraftplugindevelopment.core.annotations.Test;
-import com.bigbade.minecraftplugindevelopment.javac.factories.JavacNodeFactory;
 import com.bigbade.processorcodeapi.NodeFactoryCreator;
-import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
+import com.bigbade.processorcodeapi.api.factories.INodeFactory;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -17,9 +11,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import java.lang.reflect.Modifier;
 import java.util.Set;
 
 @SupportedAnnotationTypes("com.bigbade.minecraftplugindevelopment.core.annotations.Test")

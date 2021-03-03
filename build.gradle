@@ -13,6 +13,8 @@ allprojects {
         }
     }
 
+    version '1.0.3'
+
     apply plugin: 'maven-publish'
     apply plugin: 'java'
     apply plugin: 'io.franzbecker.gradle-lombok'
@@ -36,5 +38,8 @@ allprojects {
     }
 }
 
+subprojects {
+    group 'com.bigbade.minecraftplugindevelopment'
+}
+
 group 'com.bigbade'
-version '1.0.2'

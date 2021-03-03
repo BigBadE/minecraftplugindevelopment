@@ -30,7 +30,6 @@ public class YMLWriterProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        System.out.println("Writing");
         if(!written) {
             try {
                 FileObject resource = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",

@@ -7,6 +7,8 @@ public class PluginDevelopmentExtension {
     public boolean useHTTPS = true;
     public boolean eula = false;
     public boolean serverGui = false;
+    public boolean minecraftPluginDevelopment = true;
+    public String pluginDevelopmentVersion = "1.0.3";
 
     public String build = null;
 }

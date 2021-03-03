@@ -47,7 +47,6 @@ public class MinecraftPluginDevelopmentPlugin implements Plugin<Project> {
     public void setupDependencies(PluginDevelopmentExtension extension, Project project) throws MalformedURLException, URISyntaxException {
         URI url;
         String dependency;
-        //TODO add annotationprocessor for core (Maybe with jitpack?)
         if ("spigot".equalsIgnoreCase(extension.serverSoftware)) {
             url = new URL("http" + (extension.useHTTPS ? "s" : "")
                     + "://hub.spigotmc.org/nexus/content/repositories/snapshots/").toURI();
@@ -61,7 +60,16 @@ public class MinecraftPluginDevelopmentPlugin implements Plugin<Project> {
         }
         project.getRepositories().jcenter();
         project.getRepositories().maven(maven -> maven.setUrl(url));
+        URI jitpack = new URL("http" + (extension.useHTTPS ? "s" : "")
+                + "://jitpack.io").toURI();
+        project.getRepositories().maven(maven -> maven.setUrl(jitpack));
         project.getDependencies().add("compileOnly", dependency);
+        if(extension.minecraftPluginDevelopment) {
+            project.getDependencies().add("compileOnly", "com.bigbade.minecraftplugindevelopment:core:"
+                    + extension.pluginDevelopmentVersion);
+            project.getDependencies().add("annotationProcessor", "com.bigbade.minecraftplugindevelopment:core:"
+                    + extension.pluginDevelopmentVersion);
+        }
         if(extension.mockBukkit) {
             project.getDependencies().add("testImplementation", "com.github.seeseemelk:MockBukkit-v1.16:0.5.0");
         }

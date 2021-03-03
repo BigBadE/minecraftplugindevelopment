@@ -7,3 +7,4 @@ maven-plugin/build
 gradle-plugin/build
 example/build
 core/build
+build
