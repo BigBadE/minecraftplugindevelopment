@@ -8,5 +8,5 @@ apply plugin: 'com.bigbade.minecraftplugindevelopment'
 minecraft {
     localVersion = '1.16.5'
     eula = true
-    pluginDevelopmentVersion = '1.0.3-2'
+    pluginDevelopmentVersion = '1.0.3-3'
 }
