@@ -38,6 +38,11 @@ allprojects {
     }
 }
 
+dependencies {
+    implementation project(':core')
+    implementation project(':maven-plugin')
+    implementation project(':gradle-plugin')
+}
 subprojects {
     group 'com.bigbade.minecraftplugindevelopment'
 }

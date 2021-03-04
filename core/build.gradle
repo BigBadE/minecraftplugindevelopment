@@ -1,9 +1,16 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 dependencies {
     dependencies {
         implementation 'com.bigbade:processorcodeapi:812e048e56'
     }
+}
+
+build.finalizedBy(shadowJar)
+
+shadowJar {
+    archiveClassifier.set('')
 }
