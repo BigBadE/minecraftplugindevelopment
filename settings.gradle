@@ -1,0 +1,6 @@
+rootProject.name = 'minecraftplugindevelopment'
+
+include 'core'
+include 'gradle-plugin'
+include 'maven-plugin'
+include 'specialsource'
