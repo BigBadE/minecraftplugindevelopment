@@ -1,6 +1,3 @@
-[submodule "patcher"]
-	path = specialsource
-	url = git@github.com:BigBadE/SpecialSource.git
 [submodule "specialsource"]
 	path = specialsource
 	url = git@github.com:BigBadE/SpecialSource.git
