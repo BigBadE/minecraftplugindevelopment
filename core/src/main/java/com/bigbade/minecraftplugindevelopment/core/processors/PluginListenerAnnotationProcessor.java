@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 @SupportedAnnotationTypes("com.bigbade.minecraftplugindevelopment.core.annotations.PluginListener")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_16)
 public class PluginListenerAnnotationProcessor extends AbstractProcessor {
     private static final String LISTENER_METHOD_NAME = "registerListeners";
 
@@ -65,7 +65,8 @@ public class PluginListenerAnnotationProcessor extends AbstractProcessor {
             }
             IExpressionReference serverReference = coder.createReference(null,
                     thisType.getMethod("getServer",
-                            factory.getParameterType(factory.getClassType("org.bukkit.Server"))));
+                            factory.getParameterType(factory.getClassType("org.bukkit.Server")),
+                            Modifier.PUBLIC));
             IExpressionReference pluginManagerReference = coder.createReference(null,
                     coder.getVariable(serverReference, "getPluginManager"));
             List<IBasicExpression> params = getParams(annotated);
@@ -81,7 +82,7 @@ public class PluginListenerAnnotationProcessor extends AbstractProcessor {
                             new IParameterType[0], factory.getVoidType(), Modifier.PUBLIC).get(0));
             builder.getCodeBlock().addStatement(coder.callReference(coder.createReference(null,
                     mainType.getMethod(LISTENER_METHOD_NAME,
-                            factory.getVoidType()))));
+                            factory.getVoidType(), Modifier.PUBLIC))));
             builder.build();
         }
         registerListener.build();

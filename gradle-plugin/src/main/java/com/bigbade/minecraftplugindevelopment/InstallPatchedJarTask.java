@@ -1,16 +1,12 @@
 package com.bigbade.minecraftplugindevelopment;
 
-import com.bigbade.specialsourcesrg.Jar;
-import com.bigbade.specialsourcesrg.JarMapping;
-import com.bigbade.specialsourcesrg.JarRemapper;
+import com.bigbade.minecraftplugindevelopment.common.FileLocator;
+import com.bigbade.minecraftplugindevelopment.common.FileRemapper;
 import io.sigpipe.jbsdiff.InvalidHeaderException;
 import io.sigpipe.jbsdiff.Patch;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
-import se.llbit.json.JsonObject;
-import se.llbit.json.JsonParser;
-import se.llbit.json.JsonValue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,21 +27,20 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class InstallPatchedJarTask extends DefaultTask {
-    private static final String VERSION_MANIFEST = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
     private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
 
-    private static void patchAndMap(File jar, byte[] jarBytes, File paperJar, String mappingUrl) {
+    private static void patchJar(byte[] jar, File outputDirectory, File paperJar) {
         try (JarFile paper = new JarFile(paperJar);
-             DigestOutputStream jarOutput = new DigestOutputStream(new FileOutputStream(new File(jar.getParentFile(),
+             DigestOutputStream jarOutput = new DigestOutputStream(new FileOutputStream(new File(outputDirectory,
                      "mcpatched-temp.jar")),
                      MessageDigest.getInstance("SHA-256"))) {
             JarEntry propertiesEntry = paper.getJarEntry("patch.properties");
             Properties properties = new Properties();
             properties.load(paper.getInputStream(propertiesEntry));
             JarEntry patch = paper.getJarEntry(properties.getProperty("patch", "paperMC.patch"));
-            byte[] patchBytes = readFully(paper.getInputStream(patch));
+            byte[] patchBytes = FileRemapper.readFully(paper.getInputStream(patch));
 
-            Patch.patch(jarBytes, patchBytes, jarOutput);
+            Patch.patch(jar, patchBytes, jarOutput);
 
             byte[] digest = jarOutput.getMessageDigest().digest();
             if (!Arrays.equals(digest,
@@ -53,51 +48,16 @@ public class InstallPatchedJarTask extends DefaultTask {
                 throw new IllegalStateException("Hash of patched file is wrong! (" + bytesToHex(digest) + " vs "
                         + properties.getProperty("patchedHash") + ")");
             }
-
-            //JarMapping mapping = new JarMapping();
-            //mapping.loadMappings(new URL(mappingUrl).openStream());
-            //JarRemapper remapper = new JarRemapper(mapping);
-            //remapper.remapJar(Jar.init(new File(jar.getParentFile(),
-            //        "mcpatched-temp.jar")), jar);
         } catch (IOException | NoSuchAlgorithmException | CompressorException | InvalidHeaderException e) {
-            jar.delete();
             e.printStackTrace();
         }
-    }
-
-    private static byte[] readFully(InputStream in) throws IOException {
-        try {
-            // In a test this was 12 ms quicker than a ByteBuffer
-            // and for some reason that matters here.
-            byte[] buffer = new byte[16 * 1024];
-            int off = 0;
-            int read;
-            while ((read = in.read(buffer, off, buffer.length - off)) != -1) {
-                off += read;
-                if (off == buffer.length) {
-                    buffer = Arrays.copyOf(buffer, buffer.length * 2);
-                }
-            }
-            return Arrays.copyOfRange(buffer, 0, off);
-        } finally {
-            in.close();
-        }
-    }
-
-    private static JsonObject getVersionObject(String url) {
-        try (JsonParser parser = new JsonParser(new URL(url).openStream())) {
-            return parser.parse().asObject().get("downloads").asObject();
-        } catch (IOException | JsonParser.SyntaxError e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private static byte[] downloadAndVerifyFile(String filePath, String sha1) {
         try (InputStream inputStream = new URL(filePath).openStream()) {
             MinecraftPluginDevelopmentPlugin.LOGGER.info("Downloading from {}", filePath);
             DigestInputStream digestInputStream = new DigestInputStream(inputStream, MessageDigest.getInstance("SHA-1"));
-            byte[] output = readFully(digestInputStream);
+            byte[] output = FileRemapper.readFully(digestInputStream);
             if (!Arrays.equals(digestInputStream.getMessageDigest().digest(), getBytesOfHex(sha1))) {
                 throw new IllegalStateException("Problem downloading server jar, sha1 hash doesn't match!");
             }
@@ -146,20 +106,21 @@ public class InstallPatchedJarTask extends DefaultTask {
     }
 
     @TaskAction
-    public void installMappedNMSJar() {
+    public void installMappedNMSJar() throws IOException {
         PluginDevelopmentExtension extension = getProject().getExtensions().findByType(PluginDevelopmentExtension.class);
         assert extension != null;
         if (!extension.nmsHelper) {
             return;
         }
+        MinecraftPluginDevelopmentPlugin.LOGGER.warn("Mapped NMS Jar is a WIP feature, report issues to out GitHub");
         String mavenRepo = getProject().getRepositories().mavenLocal().getUrl().getPath();
         if (mavenRepo == null) {
             MinecraftPluginDevelopmentPlugin.LOGGER.error("No maven local repo found!");
             return;
         }
         File mavenOutput = new File(mavenRepo + File.separatorChar + "com" + File.separatorChar + "bigbade"
-                + File.separatorChar + "mcpatched" + File.separatorChar + extension.localVersion + File.separatorChar
-                + "mcpatched-" + extension.localVersion + ".jar");
+                + File.separatorChar + "mcpatched" + File.separatorChar + extension.localVersion + "-" + extension.build
+                + File.separatorChar + "mcpatched-" + extension.localVersion + "-" + extension.build + ".jar");
         Path versionFile = new File(mavenOutput.getParentFile(), "version.txt").toPath();
         if (mavenOutput.exists()) {
             try {
@@ -171,31 +132,20 @@ public class InstallPatchedJarTask extends DefaultTask {
                 //Ignore
             }
         }
+
         MinecraftPluginDevelopmentPlugin.LOGGER.info("Downloading version server jar");
-        try (JsonParser parser = new JsonParser(new URL(VERSION_MANIFEST).openStream())) {
-            JsonObject json = (JsonObject) parser.parse();
-            for (JsonValue versionValue : json.get("versions").asArray()) {
-                JsonObject version = versionValue.asObject();
-                if (!version.get("id").stringValue("nope").equals(extension.localVersion)) {
-                    continue;
-                }
-                String url = version.get("url").stringValue("whoops");
-                JsonObject server = getVersionObject(url);
-                byte[] jarBytes = downloadAndVerifyFile(
-                        server.get("server").asObject().get("url").asString("no server"),
-                        server.get("server").asObject().get("sha1").asString("no sha1 hash"));
-                mavenOutput.getParentFile().mkdirs();
-                patchAndMap(mavenOutput, jarBytes, new File(getProject().getBuildDir(),
-                                "server/paper-" + extension.build + ".jar"),
-                        server.get("server_mappings").asObject().get("url").asString("No mappings!"));
-                Files.write(versionFile, extension.build.getBytes(StandardCharsets.UTF_8));
-                return;
-            }
-            MinecraftPluginDevelopmentPlugin.LOGGER.error("Could not find version {}", extension.localVersion);
-        } catch (IOException | JsonParser.SyntaxError e) {
-            mavenOutput.delete();
-            MinecraftPluginDevelopmentPlugin.LOGGER.error("Could not read version manifest", e);
-            e.printStackTrace();
-        }
+        FileLocator locator = new FileLocator(MinecraftPluginDevelopmentPlugin.LOGGER, extension.localVersion);
+
+        mavenOutput.getParentFile().mkdirs();
+        patchJar(downloadAndVerifyFile(locator.getServer(), locator.getServerHash()),
+                mavenOutput.getParentFile(),
+                new File(getProject().getBuildDir(), "server/paper-" + extension.build + ".jar"));
+
+        new FileRemapper(MinecraftPluginDevelopmentPlugin.LOGGER, locator).remapJar(
+                new File(mavenOutput.getParentFile(), "mcpatched-temp.jar"), mavenOutput);
+        Files.writeString(versionFile, extension.build);
+        Files.writeString(new File(mavenOutput.getParentFile(),
+                        "mcpatched-" + extension.localVersion + "-" + extension.build + ".pom").toPath(),
+                MavenPom.MAVEN_POM.replace("%s", extension.localVersion + "-" + extension.build));
     }
 }
